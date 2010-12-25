@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content">
+<TextView
+ 	android:text="Pizza Types:"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"/>
+<RadioGroup
+	android:id="@+id/pizzaList"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"/>
+<EditText
+ 	android:id="@+id/quantity"
+ 	android:text="Quantity"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"/>
+<RadioGroup
+	android:id="@+id/size_selector"
+	android:orientation="horizontal"
+	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content">
+	<RadioButton
+		android:id="@+id/size_s"
+		android:text="S"
+		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"/>
+  	<RadioButton
+		android:id="@+id/size_m"
+		android:text="M"
+		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"/>
+  	<RadioButton
+		android:id="@+id/size_l"
+		android:text="L"
+		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"/>
+  	<RadioButton
+		android:id="@+id/size_xl"
+		android:text="XL"
+		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"/>
+</RadioGroup>
+  	
+<Button
+	android:id="@+id/quantitySubmit"
+	android:text="JESUS CHRIST I WANT PIZZA NOW"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"/>
+</LinearLayout>
