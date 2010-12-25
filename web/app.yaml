@@ -1,0 +1,17 @@
+application: thepizzabutton
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /pizza
+  script: pizza.py
+  
+- url: /addUser*
+  script: adduser.py
+
+- url: .*
+  script: main.py
