@@ -16,15 +16,15 @@
 #
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
-from model import pizzaList
+from model import pizza_list
 from model import Pizza
 
 # here's a comment to test git
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
-        pizzaList(self);
-        #import mechanize
+        pizza_list(self);
+        import mechanize
         #br = mechanize.Browser()
         #br.set_handle_equiv(False)
         #br.set_handle_robots(False)

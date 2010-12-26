@@ -7,9 +7,9 @@ handlers:
 - url: /static
   static_dir: static
 
-- url: /pizza
-  script: pizza.py
-  
+- url: /pizza_list
+  script: pizza_list.py
+
 - url: /addUser*
   script: adduser.py
 
