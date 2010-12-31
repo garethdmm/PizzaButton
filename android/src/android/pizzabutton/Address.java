@@ -1,11 +1,13 @@
 package android.pizzabutton;
 
 public class Address {
-	private String number;
-	private String street;
-	private String city;
-	private String postalCode;
-	private String province;
+	private String number = "";
+	private String street = "";
+	private String city = "";
+	private String postalCode = "";
+	private String province = "";
+	
+	public Address() {}
 	
 	public Address(String number, String street, String city,
 		String postalCode, String province) {

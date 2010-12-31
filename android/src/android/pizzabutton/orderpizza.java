@@ -1,6 +1,7 @@
 package android.pizzabutton;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,12 +25,13 @@ import android.pizzabutton.HttpHelper;
 
 public class orderpizza extends Activity {
 	public static final String PREFS_NAME = "PizzaPrefs";
-	private User theUser;
+	private boolean hasUser = false;
+	private User theUser = new User();
 	
 	// TODO: Make this accessible to all classes in the app.
 	private static final String TAG = "PizzaButton";
 
-	  public void ToastMsg(String message) {
+	public void ToastMsg(String message) {
 		    Toast msg = Toast.makeText(
 		        getApplicationContext(),
 		        message,
@@ -42,7 +44,15 @@ public class orderpizza extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+ 
+        SharedPreferences settings = getPreferences(MODE_WORLD_WRITEABLE);
+        SharedPreferences.Editor editor = settings.edit();
+        
+        // clear the preferences for testing purposes
+        //editor.putBoolean("hasUser", false);
+        //editor.putString("userId", "");
+        //editor.commit();
+        
         loadPage(R.layout.main);
 
         bindButtonToListener(R.id.pizza, pizzaButtonListener);
@@ -50,7 +60,19 @@ public class orderpizza extends Activity {
 
     private OnClickListener pizzaButtonListener = new OnClickListener() {
     	public void onClick(View v) {
-    		loadPageInfoPersonal();
+            SharedPreferences settings = getPreferences(MODE_WORLD_WRITEABLE);
+            hasUser = settings.getBoolean("hasUser", false);
+            
+    		if (hasUser) {
+    			Log.v("TPB", "Have the user, going straight to orderPizza()");
+    			String userId = settings.getString("userId", "");
+    			theUser.setUserId(userId);
+    			
+    			orderPizza();
+    		} else { // have to create a new user
+    			Log.v("TPB", "No user, going to create User wizard");
+    			loadPageInfoPersonal();
+    		}
     	}
     };
     
@@ -67,8 +89,7 @@ public class orderpizza extends Activity {
         
         name.setOnClickListener(clearTextListener);
         email.setOnClickListener(clearTextListener);
-        phone.setOnClickListener(clearTextListener);
-        
+        phone.setOnClickListener(clearTextListener);    
     }
     
     private OnClickListener goInfoAddressListener = new OnClickListener() {
@@ -78,31 +99,19 @@ public class orderpizza extends Activity {
     		// create a user object
     		// advance
     		
-    		/*String name = getTextById(R.id.user_name);
+    		String name = getTextById(R.id.user_name);
     		String email = getTextById(R.id.user_email);
-    		String phone = getTextById(R.id.user_phone);
-    		String streetname = getTextById(R.id.user_streetname);
-    		String streetnum = getTextById(R.id.user_streetnumber);
-    		String city = getTextById(R.id.user_city);
-    		String province = getTextById(R.id.user_province);
-    		String postalCode = getTextById(R.id.user_postalcode);
+    		String phoneNumber = getTextById(R.id.user_phone);
     		
-    		String firstName = name.substring(0, name.indexOf(" "));
-    		String lastName = name.substring(name.indexOf(" ") + 1);
-    		
-    		Address address = new Address(streetnum, streetname, city, postalCode, province);
-    		theUser = new User(firstName, lastName, phone, address, email);*/
-    		
-    		try {
-				loadPageInfoAddress();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+    		theUser.setName(name);
+    		theUser.setEmail(email);
+    		theUser.setPhoneNumber(phoneNumber);
+    	
+    		loadPageInfoAddress();	
     	}
     };
     
-    private void loadPageInfoAddress() throws JSONException {
+    private void loadPageInfoAddress() {
     	// do that http get to get the list of pizzas,
     	// display them in some sort of list, let the user pick one
     	// ask for the quantity
@@ -114,39 +123,63 @@ public class orderpizza extends Activity {
     
     private OnClickListener goInfoOrderListener = new OnClickListener() {
     	public void onClick(View v) {
+    		
+    		String number = getTextById(R.id.user_streetnumber);
+    		String street = getTextById(R.id.user_streetname);
+    		String city = getTextById(R.id.user_city);
+    		String postalCode = getTextById(R.id.user_postalcode);
+    		String province = getTextById(R.id.user_province);
+    		
+    		Address address = new Address(number, street, city, 
+    				postalCode, province);
+    		 
+    		theUser.setAddress(address);
+    		
     		loadPageInfoOrder();
     	}
     };
     
     private void loadPageInfoOrder() {
     	loadPage(R.layout.info_order);
-    	
-    	RadioGroup rg = (RadioGroup)findViewById(R.id.pizzaList);
-    	
-    	JSONArray json = getPizzaTypes();
-    	
-    	int i = 0;
-    	while (i < json.length()) {
-    		JSONObject jobj;
-    		String id = "";
-    		String pizzaType = "";
+    
+    	bindButtonToListener(R.id.orderSubmit, orderSubmitListener);
+    }
+
+    // we need to separate this into PizzaButton and "Jesus Christ" button
+    // functionalities
+    private OnClickListener orderSubmitListener = new OnClickListener() {
+    	public void onClick(View v) {
+    		createUser();
+    		orderPizza();
     		
-			try {
-				jobj = json.getJSONObject(i);
-	    		id = jobj.getString("id");
-	    		pizzaType = jobj.getString("pizzaType");
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		
-			RadioButton rb = new RadioButton(this);
-			
-    		rb.setText(pizzaType);
-    		
-    		rg.addView(rb);
-    		i++;
-    	}    	
+    		loadPage(R.layout.main);
+            bindButtonToListener(R.id.pizza, pizzaButtonListener);
+    	}
+    };
+
+    private void orderPizza() {
+    	Log.v("TPB", "Ordering pizza!");
+    	String response = APIWrapper.order_pizza(theUser.getUserId());
+    	Log.v("TPB", response);
+    }
+    
+    private void createUser() {
+    	Log.v("TPB", theUser.getName());
+    	Log.v("TPB", theUser.getJSON());
+    	String retUserId = APIWrapper.add_user(theUser.getJSON());
+    	this.theUser.setUserId(retUserId);
+    	Log.v("TPB", "New user id: " + this.theUser.getUserId());
+    	
+        SharedPreferences settings = getPreferences(MODE_WORLD_WRITEABLE);
+    	SharedPreferences.Editor editor = settings.edit();
+    	
+    	editor.putString("userId", theUser.getUserId());
+    	editor.putBoolean("hasUser", true);
+    	editor.commit();
+    	
+    	this.hasUser = true;
+    	
+    	Log.v("TPB", "UserId from preferences: " + settings.getString("userId", ""));
     }
     
     private JSONArray getPizzaTypes() {

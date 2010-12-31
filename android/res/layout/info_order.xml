@@ -45,7 +45,7 @@
 </RadioGroup>
   	
 <Button
-	android:id="@+id/quantitySubmit"
+	android:id="@+id/orderSubmit"
 	android:text="JESUS CHRIST I WANT PIZZA NOW"
   	android:layout_width="wrap_content"
   	android:layout_height="wrap_content"/>

@@ -10,8 +10,14 @@ handlers:
 - url: /pizza_list
   script: pizza_list.py
 
-- url: /addUser*
-  script: adduser.py
+- url: /order_pizza*
+  script: order_pizza.py
+
+- url: /add_user*
+  script: add_user.py
+
+- url: /get_users
+  script: get_users.py
 
 - url: .*
   script: main.py

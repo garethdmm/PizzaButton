@@ -1,14 +1,15 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
-from model import pizza_list
+from robot import getPizza
 
-class PizzaHandler(webapp.RequestHandler):
-	def get(self):
-  #TODO: hook this up with the mechanize code
-  self.response.out.write("You're ordering a pizza!");
+class OrderPizzaHandler(webapp.RequestHandler):
+  def post(self):
+    #TODO: hook this up with the mechanize code
+    userId = self.request.get('userId')
+    self.response.out.write("Ordering pizza for user: " + userId)
 
 def main():
-  application = webapp.WSGIApplication([('/pizza_list',PizzaHandler)], debug=True)
+  application = webapp.WSGIApplication([('/order_pizza',OrderPizzaHandler)], debug=True)
   util.run_wsgi_app(application)
   
 if __name__ == '__main__':
