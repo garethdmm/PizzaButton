@@ -6,7 +6,8 @@ class OrderPizzaHandler(webapp.RequestHandler):
   def post(self):
     #TODO: hook this up with the mechanize code
     userId = self.request.get('userId')
-    self.response.out.write("Ordering pizza for user: " + userId)
+    #self.response.out.write("Ordering pizza for user: " + userId)
+    getPizza(self, userId)
 
 def main():
   application = webapp.WSGIApplication([('/order_pizza',OrderPizzaHandler)], debug=True)

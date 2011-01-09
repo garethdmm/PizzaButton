@@ -1,5 +1,11 @@
 package android.pizzabutton;
 
+/**
+ * Abstracts an Address object in our database
+ * 
+ * @author gareth
+ *
+ */
 public class Address {
 	private String number = "";
 	private String street = "";
@@ -18,6 +24,7 @@ public class Address {
 		this.province = province;
 	}
 	
+	// Getters and Setters for the Address fields
 	public String getNumber() { return number; }
 	public String getStreet() { return street; }
 	public String getCity() { return city; }

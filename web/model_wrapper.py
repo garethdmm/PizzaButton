@@ -13,6 +13,18 @@ from model import Address
 from model import Order
 from model import User
 
+
+def getUser(userId):
+  # TODO: error handling in case of a bad id
+  user = db.get(userId.strip())
+  print user
+  return user
+
+def getAddress(addressId):
+  address = db.get(addressId.strip())
+  print address
+  return address
+
  # Takes in a user json string and adds a user, address and order to the database
  # Returns a user key
 def insert_user(user_json):

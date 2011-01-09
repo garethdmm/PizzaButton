@@ -17,19 +17,21 @@ import android.widget.Toast;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.TimerTask;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.*;
 
 import android.pizzabutton.HttpHelper;
 
+
 public class orderpizza extends Activity {
-	public static final String PREFS_NAME = "PizzaPrefs";
 	private boolean hasUser = false;
 	private User theUser = new User();
 	
 	// TODO: Make this accessible to all classes in the app.
-	private static final String TAG = "PizzaButton";
+	private static final String TAG = "TPB";
 
 	public void ToastMsg(String message) {
 		    Toast msg = Toast.makeText(
@@ -49,9 +51,9 @@ public class orderpizza extends Activity {
         SharedPreferences.Editor editor = settings.edit();
         
         // clear the preferences for testing purposes
-        //editor.putBoolean("hasUser", false);
-        //editor.putString("userId", "");
-        //editor.commit();
+        editor.putBoolean("hasUser", false);
+        editor.putString("userId", "");
+        editor.commit();
         
         loadPage(R.layout.main);
 
@@ -161,6 +163,8 @@ public class orderpizza extends Activity {
     	Log.v("TPB", "Ordering pizza!");
     	String response = APIWrapper.order_pizza(theUser.getUserId());
     	Log.v("TPB", response);
+    	// TODO: actually check if it worked
+    	ToastMsg("Fuck yeah, Pizza is on its way!");
     }
     
     private void createUser() {
@@ -196,7 +200,7 @@ public class orderpizza extends Activity {
         	Log.v(TAG, "Error parsing JSON: "+e);
         	return null;
         }
-    }
+    }  
     
     ///////
     
@@ -225,5 +229,5 @@ public class orderpizza extends Activity {
     private void bindButtonToListener(int id, OnClickListener listener) {
         Button button = (Button)findViewById(id);
         button.setOnClickListener(listener);
-    }  
+    }
 }
